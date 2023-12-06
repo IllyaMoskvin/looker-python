@@ -23,7 +23,7 @@ class SecretSauceMaker:
         for date in dates:
             seed = date + str(foo) + str(bar)
             random.seed(seed)
-            revenue += random.randrange(0, 100000)
+            revenue += random.randrange(0, 1000000)
             out.append((int(foo), bar, date, revenue))
         return out
 
