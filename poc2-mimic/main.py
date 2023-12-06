@@ -5,6 +5,12 @@ import re
 
 from mysql_mimic.types import Capabilities
 
+from mysql_mimic.variables import (
+    SessionVariables,
+    GlobalVariables,
+    SYSTEM_VARIABLES
+)
+
 from mysql_mimic import (
     MysqlServer,
     IdentityProvider,
@@ -53,6 +59,10 @@ class CustomIdentityProvider(IdentityProvider):
 class SessionFactory(Session):
     def __init__(self, *args, **kwargs):
         self.sauce_maker = SecretSauceMaker()
+        # Fix "Unknown variable: group_concat_max_len"
+        kwargs["variables"] = SessionVariables(GlobalVariables(SYSTEM_VARIABLES | {
+            "group_concat_max_len": (int, 1024, True)
+        }))
         super().__init__(*args, **kwargs)
 
     async def query(self, expression, sql, attrs):
