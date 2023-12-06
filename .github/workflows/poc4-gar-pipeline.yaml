@@ -1,4 +1,4 @@
-name: POC4 GAR Pipeline
+name: POC4 Build and Deploy
 on:
   push:
     branches:
@@ -49,3 +49,7 @@ jobs:
         run: |-
           docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}"
           docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:latest"
+
+      - name: 'Update the GCE instance'
+        run: |-
+          gcloud compute instances update-container looker-py-poc4 --project="${{ env.PROJECT_ID }}" --zone="${{ env.GCE_ZONE }}" --container-image="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}"
