@@ -96,13 +96,13 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 
             self.sauce_saver.save_sauce(sauce)
         except Exception:
-            return self.respond(500, "Failed to make sauce")
+            return self.respond(500, "Failed to generate results!")
 
         # Uncomment for debug. This API does not return the result.
         # It writes the result to a database connected to Looker.
         # return self.respond(200, json.dumps(sauce))
 
-        return self.respond(200, "Made sauce. Please rerun your query.")
+        return self.respond(200, "Results ready. Please rerun your query.")
 
 
 def serve(handler):
