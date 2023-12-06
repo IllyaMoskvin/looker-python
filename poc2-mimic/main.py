@@ -3,6 +3,8 @@ import os
 import random
 import re
 
+from mysql_mimic.types import Capabilities
+
 from mysql_mimic import (
     MysqlServer,
     IdentityProvider,
@@ -64,8 +66,7 @@ class SessionFactory(Session):
         bar = m_bar.group() if m_bar else 'ABC'
 
         # We are going to harcode results to only return date and revenue
-        # Fixes Java::JavaLang::ArrayIndexOutOfBoundsException
-        # Ideally, we should check the SELECT clause here
+        # Ideally, check the SELECT clause here and decide what to return
         results = self.sauce_maker.make_sauce(foo, bar)
         results = [(v[2], v[3]) for v in results]
         return results, ["date", "revenue"]
@@ -84,5 +85,24 @@ class SessionFactory(Session):
 if __name__ == "__main__":
     password = os.environ.get("DB_PASS", "does_not_matter")
     identity_provider = CustomIdentityProvider(passwords={"looker": password})
-    server = MysqlServer(identity_provider=identity_provider, session_factory=SessionFactory)
+    server = MysqlServer(
+        identity_provider=identity_provider,
+        session_factory=SessionFactory,
+        capabilities=(
+            Capabilities.CLIENT_PROTOCOL_41
+            # Enabling this causes an error with mariadb-java-client-2.5.4:
+            # java.lang.ArrayIndexOutOfBoundsException: Index 7 out of bounds for length 7
+            # | Capabilities.CLIENT_DEPRECATE_EOF
+            | Capabilities.CLIENT_CONNECT_WITH_DB
+            | Capabilities.CLIENT_QUERY_ATTRIBUTES
+            | Capabilities.CLIENT_CONNECT_ATTRS
+            | Capabilities.CLIENT_PLUGIN_AUTH
+            | Capabilities.CLIENT_PLUGIN_AUTH_LENENC_CLIENT_DATA
+            | Capabilities.CLIENT_SECURE_CONNECTION
+            | Capabilities.CLIENT_LONG_PASSWORD
+            | Capabilities.CLIENT_ODBC
+            | Capabilities.CLIENT_INTERACTIVE
+            | Capabilities.CLIENT_IGNORE_SPACE
+        )
+    )
     asyncio.run(server.serve_forever())
