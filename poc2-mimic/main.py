@@ -25,7 +25,7 @@ class SecretSauceMaker:
     Substitute this for an ML model, optimization function, etc.
     """
     def make_sauce(self, foo, bar):
-        dates = [f'2024-{i:02d}-01' for i in range(1, 12)]
+        dates = [f'2024-{i:02d}-01' for i in range(1, 13)]
         revenue = 1000000
         out = []
         for date in dates:
