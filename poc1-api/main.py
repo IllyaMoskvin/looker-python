@@ -107,7 +107,7 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 
 def serve(handler):
     # https://stackoverflow.com/questions/43146298/http-request-from-chrome-hangs-python-webserver
-    httpd = ThreadingHTTPServer(('', 4242), handler)
+    httpd = ThreadingHTTPServer(('', 80), handler)
     httpd.serve_forever()
 
 
