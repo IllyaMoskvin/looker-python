@@ -8,6 +8,7 @@ on:
   pull_request:
     paths:
       - poc2-mimic/**
+  workflow_dispatch:
 
 env:
   PROJECT_ID: looker-hackathon-2023
