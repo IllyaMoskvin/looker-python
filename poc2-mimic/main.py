@@ -87,7 +87,7 @@ class SessionFactory(Session):
                 "foo": "INT",
                 "bar": "VARCHAR(255)",
                 "date": "VARCHAR(255)",
-                "revenue": "FLOAT",
+                "revenue": "INT",
             }
         }
 
