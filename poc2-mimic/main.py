@@ -79,7 +79,7 @@ class SessionFactory(Session):
         # Ideally, check the SELECT clause here and decide what to return
         results = self.sauce_maker.make_sauce(foo, bar)
         results = [(v[2], v[3]) for v in results]
-        return results, ["date", "revenue"]
+        return results, ["poc2.date", "poc2.revenue"]
 
     async def schema(self):
         return {
