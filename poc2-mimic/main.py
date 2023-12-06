@@ -58,7 +58,7 @@ class SessionFactory(Session):
         # `expression` is a sqlglot expression, which could be parsed resiliently.
         # Please *DO NOT* parse SQL with RegEx in production.
         # For more info: https://github.com/tobymao/sqlglot
-        m_foo = re.search(r'(?<=foo = )\d', str(expression))
+        m_foo = re.search(r'(?<=foo = )\d+', str(expression))
         m_bar = re.search(r'(?<=bar = \').*(?=\')', str(expression))
         foo = m_foo.group() if m_foo else ''
         bar = m_bar.group() if m_bar else ''
