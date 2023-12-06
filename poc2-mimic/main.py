@@ -62,7 +62,13 @@ class SessionFactory(Session):
         m_bar = re.search(r'(?<=\(poc2\.bar\) = \').*(?=\')', str(expression))
         foo = m_foo.group() if m_foo else '123'
         bar = m_bar.group() if m_bar else 'ABC'
-        return self.sauce_maker.make_sauce(foo, bar), ["foo", "bar", "date", "revenue"]
+
+        # We are going to harcode results to only return date and revenue
+        # Fixes Java::JavaLang::ArrayIndexOutOfBoundsException
+        # Ideally, we should check the SELECT clause here
+        results = self.sauce_maker.make_sauce(foo, bar)
+        results = [(v[2], v[3]) for v in results]
+        return results, ["date", "revenue"]
 
     async def schema(self):
         return {
