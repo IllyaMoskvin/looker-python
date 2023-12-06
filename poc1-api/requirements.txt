@@ -4,5 +4,5 @@
 #
 #    pip-compile
 #
-pymysql==1.1.0
+psycopg2-binary==2.9.9
     # via -r requirements.in

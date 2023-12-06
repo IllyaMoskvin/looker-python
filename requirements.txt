@@ -6,10 +6,10 @@
 #
 mysql-mimic==2.5.3
     # via -r poc2-mimic/requirements.txt
+psycopg2-binary==2.9.9
+    # via -r poc1-api/requirements.txt
 pymysql==1.1.0
-    # via
-    #   -r poc1-api/requirements.txt
-    #   -r poc2-mimic-test/requirements.txt
+    # via -r poc2-mimic-test/requirements.txt
 sqlglot==19.9.0
     # via
     #   -r poc2-mimic/requirements.txt
