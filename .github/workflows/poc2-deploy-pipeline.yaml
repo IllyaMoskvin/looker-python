@@ -33,4 +33,4 @@ jobs:
 
       - name: 'Update the GCE instance'
         run: |-
-          gcloud compute instances update-container looker-py-poc2 --project="${{ looker-hackathon-2023 }}" --zone="${{ GCE_ZONE }}" --container-image="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}"
+          gcloud compute instances update-container looker-py-poc2 --project="${{ env.PROJECT_ID }}" --zone="${{ env.GCE_ZONE }}" --container-image="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}"
