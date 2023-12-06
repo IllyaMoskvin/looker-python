@@ -79,15 +79,18 @@ class SessionFactory(Session):
         # Ideally, check the SELECT clause here and decide what to return
         results = self.sauce_maker.make_sauce(foo, bar)
         results = [(v[2], v[3]) for v in results]
+        # Columns names must match *EXACTLY* what is in the SELECT clause:
+        # e.g. if Looker asks for "poc2.date AS `poc2.date`",
+        # you *MUST* include the table name as a prefix here.
         return results, ["poc2.date", "poc2.revenue"]
 
     async def schema(self):
         return {
             "poc2": {
-                "foo": "INT",
-                "bar": "VARCHAR(255)",
-                "date": "VARCHAR(255)",
-                "revenue": "INT",
+                "foo": "INT",  # arbitrary int seed
+                "bar": "VARCHAR(255)",  # arbitrary string seed
+                "date": "VARCHAR(10)",  # a string for simplicity
+                "revenue": "INT",  # could be float, but we return ints
             }
         }
 
