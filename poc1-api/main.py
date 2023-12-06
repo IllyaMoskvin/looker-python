@@ -1,8 +1,11 @@
 import json
+import os
 import random
 
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
+
+import pymysql
 
 
 class SecretSauceMaker:
@@ -25,10 +28,44 @@ class SauceSaver():
     """
     Save tabular results to wherever Looker's lookin' at
     """
-    def save_sauce(self):
-        # TODO: Save to BigQuery. See this thread:
-        # https://discord.com/channels/1163767159466504245/1181709334271496323/1181710892178608209
-        pass
+    def __init__(self, *args, **kwargs):
+        # TODO: The call below hangs, but I'm not sure why
+        # print(os.environ["DB_HOST"])
+        # print(int(os.environ["DB_PORT"]))
+        # print(os.environ["DB_USER"])
+        # print(os.environ["DB_PASS"])
+        # print(os.environ["DB_DB"])
+
+        self.connection = pymysql.connect(
+            host=os.environ["DB_HOST"],
+            port=int(os.environ["DB_PORT"]),
+            user=os.environ["DB_USER"],
+            password=os.environ["DB_PASS"],
+            db=os.environ["DB_DB"],
+            ssl={"verify_mode": None},
+        )
+
+    def save_sauce(self, sauce):
+        """
+        Our sauce maker is deterministic, so we don't need to replace results,
+        but we do so here for demonstration.
+        """
+        pattern = ", ".join(["(%s, %s, %s, %s)" for i in range(len(sauce))])
+        values = (sauce[0][0], sauce[0][1]) + sum(sauce, ())
+        sql = f"""
+            DELETE FROM
+                `poc1`
+            WHERE
+                foo = %s AND bar = %s;
+            INSERT INTO `poc1`
+                (`foo`, `bar`, `date`, `revenue`)
+            VALUES
+                {pattern};
+        """
+        # TODO: Having some trouble with this connection hanging
+        with self.connection.cursor() as cursor:
+            cursor.execute(sql, values)
+            self.connection.commit()
 
 
 class HTTPRequestHandler(BaseHTTPRequestHandler):
@@ -67,6 +104,8 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
             )
         except Exception:
             return self.respond(500, "Failed to make sauce")
+
+        sauce = self.sauce_saver.save_sauce(sauce)
 
         # Uncomment for debug. This API does not return the result.
         # It writes the result to a database connected to Looker.

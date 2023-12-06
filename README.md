@@ -11,7 +11,7 @@ This POC offers a GET API. We parse the query string parameters, run some calcul
 ```bash
 cd poc1-api/
 docker build -t poc1 .
-docker run -p 8080:80 poc1
+DB_HOST='' DB_PORT='' DB_USER='' DB_PASS='' DB_DB='' docker run -p 8080:80 -e DB_HOST -e DB_PORT -e DB_USER -e DB_PASS -e DB_DB poc1
 ```
 
 Visit http://localhost:8080 in your browser.
