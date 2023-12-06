@@ -1,4 +1,5 @@
 import asyncio
+import os
 import random
 import re
 
@@ -63,7 +64,6 @@ class SessionFactory(Session):
         bar = m_bar.group() if m_bar else ''
         return self.sauce_maker.make_sauce(foo, bar), ["foo", "bar", "date", "revenue"]
 
-
     async def schema(self):
         return {
             "poc2": {
@@ -76,6 +76,7 @@ class SessionFactory(Session):
 
 
 if __name__ == "__main__":
-    identity_provider = CustomIdentityProvider(passwords={"looker": "does_not_matter"})
+    password = os.environ.get("DB_PASS", "does_not_matter")
+    identity_provider = CustomIdentityProvider(passwords={"looker": password})
     server = MysqlServer(identity_provider=identity_provider, session_factory=SessionFactory)
     asyncio.run(server.serve_forever())

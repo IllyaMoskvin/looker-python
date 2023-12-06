@@ -26,10 +26,28 @@ Setup a MySQL connection in Looker to point at wherever this script is running.
 ```bash
 cd poc2-mimic/
 docker build -t poc2 .
-docker run -p 3306:3306 poc2
+DB_PASS='foobar' docker run -p 3306:3306 -e DB_PASS poc2
 ```
 
+Then, in a different session, run this to test it:
 
+```bash
+cd poc2-mimic-test/
+docker build -t poc2-test .
+DB_PASS='foobar' DB_HOST='host.docker.internal' docker run -e DB_PASS -e DB_HOST poc2-test 123 ABC
+
+# host.docker.internal is for macOS, see this for details:
+# https://stackoverflow.com/questions/17770902/forward-host-port-to-docker-container
+
+# Alternatively... (faster, but messier)
+cd poc2-mimic-test/
+pip install -r requirements.txt
+DB_PASS='foobar' DB_HOST='localhost' python main.py 123 ABC
+```
+
+`DB_PASS` must match between the two commands. `DB_HOST` is provided for testing remote server.
+
+When calling the test script, change `123` and `ABC` to change the seed value.
 
 
 ## References

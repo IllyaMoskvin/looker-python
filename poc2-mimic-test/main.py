@@ -1,12 +1,14 @@
-
+import os
 import sys
 import pymysql.cursors
 
-# connection = pymysql.connect(host='looker-py-poc2.imoskvin.com')
+host = os.environ.get("DB_HOST", "localhost")
+password = os.environ.get("DB_PASS", "does_not_matter")
+
 connection = pymysql.connect(
-    host='localhost',
+    host=host,
     user='looker',
-    password='does_not_matter',
+    password=password,
     db='does_not_matter',
 )
 cursor = connection.cursor()
