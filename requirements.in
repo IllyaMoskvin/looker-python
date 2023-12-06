@@ -1,0 +1,4 @@
+# This requirements file is just here to ease development
+# It allows us to setup a single venv for all our scripts
+-r poc2-mimic/requirements.txt
+-r poc2-mimic-test/requirements.txt
