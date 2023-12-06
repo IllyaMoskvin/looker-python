@@ -86,7 +86,7 @@ class SessionFactory(Session):
             "poc2": {
                 "foo": "INT",
                 "bar": "VARCHAR(255)",
-                "date": "DATE",
+                "date": "VARCHAR(255)",
                 "revenue": "FLOAT",
             }
         }
