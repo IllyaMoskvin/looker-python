@@ -1,0 +1,48 @@
+name: POC1 GAR Pipeline
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - poc1-api/**
+  pull_request:
+    paths:
+      - poc1-api/**
+
+env:
+  PROJECT_ID: looker-hackathon-2023
+  GAR_LOCATION: us-central1
+  REPOSITORY: poc1-api
+  IMAGE: main
+
+jobs:
+  gar-login-build-push:
+    name: GAR Login, Build & Push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: 'Google Auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          project_id: '${{ env.PROJECT_ID }}'
+
+      - name: 'Docker Auth'
+        run: |-
+          gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev
+
+      - name: 'Docker Build'
+        working-directory: poc1-api
+        run: |-
+          docker build . --file Dockerfile --tag "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}"
+
+      - name: 'Docker Push to GAR'
+        run: |-
+          docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}"
