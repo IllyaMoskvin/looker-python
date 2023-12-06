@@ -56,5 +56,5 @@ jobs:
           gcloud compute instances update-container looker-py-poc2 \
             --project="${{ env.PROJECT_ID }}" \
             --zone="${{ env.GCE_ZONE }}" \
-            --container-env=DB_PASS=does_not_matter \
+            --container-env=DB_PASS="${{ secrets.POC2_DB_PASS }}" \
             --container-image="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}"
