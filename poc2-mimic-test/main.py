@@ -15,21 +15,22 @@ cursor = connection.cursor()
 
 query = """
     SELECT
-        foo,
-        bar,
-        date,
-        revenue,
-    FROM
-        `does_not_matter`
-    WHERE
-        foo = %s AND bar = %s
+        (DATE(CONVERT_TZ(poc2.date,'UTC','America/Los_Angeles'))) AS `poc2.date`,
+        SUM(poc2.revenue)  AS `poc2.revenue`
+    FROM poc2
+        WHERE (poc2.foo) = %s AND (poc2.bar) = %s
+    GROUP BY
+        1
+    ORDER BY
+        1
+    LIMIT 5000
 """
 
 cursor.execute(
     query,
     (
-        int(sys.argv[1]) if len(sys.argv) > 1 else 0,
-        sys.argv[2] if len(sys.argv) > 2 else "Scenario B",
+        int(sys.argv[1]) if len(sys.argv) > 1 else 123,
+        sys.argv[2] if len(sys.argv) > 2 else "ABC",
     )
 )
 
