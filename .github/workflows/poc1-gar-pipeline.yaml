@@ -4,9 +4,11 @@ on:
     branches:
       - main
     paths:
+      - .github/workflows/poc1-gar-pipeline.yaml
       - poc1-api/**
   pull_request:
     paths:
+      - .github/workflows/poc1-gar-pipeline.yaml
       - poc1-api/**
   workflow_dispatch:
 
