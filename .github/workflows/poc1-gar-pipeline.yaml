@@ -58,7 +58,7 @@ jobs:
             --zone="${{ env.GCE_ZONE }}" \
             --container-env=DB_HOST="${{ secrets.POC1_DB_HOST }}" \
             --container-env=DB_USER="${{ secrets.POC1_DB_USER }}" \
+            --container-env=DB_PORT="${{ secrets.POC1_DB_PORT }}" \
             --container-env=DB_PASS="${{ secrets.POC1_DB_PASS }}" \
             --container-env=DB_DB="${{ secrets.POC1_DB_DB }}" \
             --container-image="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}"
-
